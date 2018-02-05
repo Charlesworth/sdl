@@ -1,6 +1,7 @@
 //Using SDL and standard IO
 #include "SDL2/SDL.h"
 #include <stdio.h>
+#include <string>
 
 //Screen dimension constants
 const int SCREEN_WIDTH = 640;
@@ -26,8 +27,7 @@ SDL_Window* gWindow = NULL;
 //The surface contained by the window
 SDL_Surface* gScreenSurface = NULL;
 
-//The image we will load and show on the screen
-SDL_Surface* gHelloWorld = NULL;
+
 
 bool init()
 {
@@ -59,34 +59,22 @@ bool init()
 	return success;
 }
 
-bool loadMedia()
-{
-	//Loading success flag
-	bool success = true;
-
-	//Load splash image
-	gHelloWorld = SDL_LoadBMP( "man.bmp" );
-	if( gHelloWorld == NULL )
-	{
-		printf( "Unable to load image %s! SDL Error: %s\n", "man.bmp", SDL_GetError() );
-		success = false;
-	}
-
-	return success;
-}
-
 void close()
 {
-	//Deallocate surface
-	SDL_FreeSurface( gHelloWorld );
-	gHelloWorld = NULL;
-
 	//Destroy window
 	SDL_DestroyWindow( gWindow );
 	gWindow = NULL;
 
 	//Quit SDL subsystems
 	SDL_Quit();
+}
+
+//Load image at specified path 
+SDL_Surface* loadSurface( std::string path ) { 
+    SDL_Surface* loadedSurface = SDL_LoadBMP( path.c_str() ); if( loadedSurface == NULL ) { 
+        printf( "Unable to load image %s! SDL Error: %s\n", path.c_str(), SDL_GetError() ); 
+    } 
+    return loadedSurface; 
 }
 
 int main( int argc, char* args[] )
@@ -98,33 +86,35 @@ int main( int argc, char* args[] )
         return 1;
 	}
 
-    while(!quit) {
-        //Load media
-        if( !loadMedia() )
-        {
-            printf( "Failed to load media!\n" );
-        }
-        else
-        {
-            //Handle events on queue 
-            while( SDL_PollEvent( &e ) != 0 ) { 
-                //User requests quit 
-                if( e.type == SDL_QUIT ) { 
-                    quit = true; 
-                } 
-
-                if( e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_ESCAPE) {
-                    quit = true; 
-                }
-            }
-
-            //Apply the image
-            SDL_BlitSurface( gHelloWorld, NULL, gScreenSurface, NULL );
-            
-            //Update the surface
-            SDL_UpdateWindowSurface( gWindow );
-        }
+    //The image we will load and show on the screen
+    SDL_Surface* gHelloWorld = loadSurface("man.bmp");
+    if( gHelloWorld == NULL) {
+        quit = true;
     }
+
+    while(!quit) {
+        //Handle events on queue 
+        while( SDL_PollEvent( &e ) != 0 ) { 
+            //User requests quit 
+            if( e.type == SDL_QUIT ) { 
+                quit = true; 
+            } 
+
+            if( e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_ESCAPE) {
+                quit = true; 
+            }
+        }
+
+        //Apply the image
+        SDL_BlitSurface( gHelloWorld, NULL, gScreenSurface, NULL );
+        
+        //Update the surface
+        SDL_UpdateWindowSurface( gWindow );
+    }
+
+    //Deallocate surface
+	SDL_FreeSurface( gHelloWorld );
+	gHelloWorld = NULL;
 
 	//Free resources and close SDL
 	close();
