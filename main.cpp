@@ -106,14 +106,23 @@ int main( int argc, char* args[] )
         }
         else
         {
+            //Handle events on queue 
+            while( SDL_PollEvent( &e ) != 0 ) { 
+                //User requests quit 
+                if( e.type == SDL_QUIT ) { 
+                    quit = true; 
+                } 
+
+                if( e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_ESCAPE) {
+                    quit = true; 
+                }
+            }
+
             //Apply the image
             SDL_BlitSurface( gHelloWorld, NULL, gScreenSurface, NULL );
             
             //Update the surface
             SDL_UpdateWindowSurface( gWindow );
-
-            //Wait two seconds
-            SDL_Delay( 5000 );
         }
     }
 
