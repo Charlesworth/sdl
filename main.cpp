@@ -104,6 +104,7 @@ int main( int argc, char* args[] )
 
     //Event handler
     INPUT i = NO_INPUT;
+	int x = 10;
 
     while(!quit) {
         //Handle events on queue
@@ -114,8 +115,26 @@ int main( int argc, char* args[] )
             quit = true; 
         }
 
-        //Apply the image
-        SDL_BlitSurface( gHelloWorld, NULL, gScreenSurface, NULL );
+
+		if ( i == INPUT::LEFT ) {
+			x--;
+		}
+
+
+		if ( i == INPUT::RIGHT ) {
+			x++;
+		}
+
+		SDL_Rect man;
+		man.x = x;
+		man.y = 30;
+		man.w = 40;
+		man.h = 40;
+
+		SDL_BlitScaled( gHelloWorld, NULL, gScreenSurface, &man );
+
+        // Use this for any background image
+        // SDL_BlitSurface( gHelloWorld, NULL, gScreenSurface, NULL );
         
         //Update the surface
         SDL_UpdateWindowSurface( gWindow );
