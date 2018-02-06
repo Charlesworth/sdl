@@ -2,6 +2,7 @@
 #include "SDL2/SDL.h"
 #include <stdio.h>
 #include <string>
+#include "input.h"
 
 //Screen dimension constants
 const int SCREEN_WIDTH = 640;
@@ -18,16 +19,12 @@ void close();
 
 //Main loop flag 
 bool quit = false;
-//Event handler
-SDL_Event e;
 
 //The window we'll be rendering to
 SDL_Window* gWindow = NULL;
 	
 //The surface contained by the window
 SDL_Surface* gScreenSurface = NULL;
-
-
 
 bool init()
 {
@@ -71,10 +68,23 @@ void close()
 
 //Load image at specified path 
 SDL_Surface* loadSurface( std::string path ) { 
+	//Load image at specified path
     SDL_Surface* loadedSurface = SDL_LoadBMP( path.c_str() ); if( loadedSurface == NULL ) { 
-        printf( "Unable to load image %s! SDL Error: %s\n", path.c_str(), SDL_GetError() ); 
-    } 
-    return loadedSurface; 
+        printf( "Unable to load image %s! SDL Error: %s\n", path.c_str(), SDL_GetError() );
+		return NULL;
+    }
+
+	//Convert surface to screen format
+	SDL_Surface* optimizedSurface = SDL_ConvertSurface( loadedSurface, gScreenSurface->format, 0);
+	if( optimizedSurface == NULL ){
+		printf( "Unable to optimize image %s! SDL Error: %s\n", path.c_str(), SDL_GetError() );
+		return NULL;
+	}
+
+	//Get rid of old loaded surface 
+	SDL_FreeSurface( loadedSurface );
+    
+	return optimizedSurface; 
 }
 
 int main( int argc, char* args[] )
@@ -92,17 +102,16 @@ int main( int argc, char* args[] )
         quit = true;
     }
 
-    while(!quit) {
-        //Handle events on queue 
-        while( SDL_PollEvent( &e ) != 0 ) { 
-            //User requests quit 
-            if( e.type == SDL_QUIT ) { 
-                quit = true; 
-            } 
+    //Event handler
+    INPUT i = NO_INPUT;
 
-            if( e.type == SDL_KEYDOWN && e.key.keysym.sym == SDLK_ESCAPE) {
-                quit = true; 
-            }
+    while(!quit) {
+        //Handle events on queue
+        i = getInput();
+
+        if( i == INPUT::QUIT ) { 
+            //User requests quit 
+            quit = true; 
         }
 
         //Apply the image
@@ -110,6 +119,8 @@ int main( int argc, char* args[] )
         
         //Update the surface
         SDL_UpdateWindowSurface( gWindow );
+
+		SDL_Delay( 16 );
     }
 
     //Deallocate surface
