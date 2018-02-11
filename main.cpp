@@ -95,13 +95,13 @@ int main( int argc, char* args[] )
 	}
 
     //The image we will load and show on the screen
-    SDL_Surface* gMan = loadBMPSurface("man.bmp");
+    SDL_Surface* gMan = loadBMPSurface("assets/man.bmp");
     if( gMan == NULL) {
         quit = true;
     }
 
 	// Background image
-    SDL_Surface* gBackground = loadBMPSurface("space.bmp");
+    SDL_Surface* gBackground = loadBMPSurface("assets/space.bmp");
     if( gBackground == NULL) {
         quit = true;
     }
