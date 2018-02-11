@@ -1,7 +1,6 @@
 #include "SDL2/SDL.h"
 #include "input.h"
 #include <vector>
-#include <iostream>
 #include <set>
 
 
@@ -87,7 +86,6 @@ std::set<INPUT> getInputs() {
             std::set<INPUT> quitSet = {QUIT};
             return quitSet;
         }
-
 
         if (keys[SDL_SCANCODE_W] || keys[SDL_SCANCODE_UP]){
             inputSet.insert(UP);

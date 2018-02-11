@@ -13,14 +13,8 @@ const int SCREEN_HEIGHT = 480;
 //Starts up SDL and creates window
 bool init();
 
-//Loads media
-bool loadMedia();
-
 //Frees media and shuts down SDL
 void close();
-
-//Main loop flag 
-bool quit = false;
 
 //The window we'll be rendering to
 SDL_Window* gWindow = NULL;
@@ -69,7 +63,7 @@ void close()
 }
 
 //Load image at specified path 
-SDL_Surface* loadSurface( std::string path ) { 
+SDL_Surface* loadBMPSurface( std::string path ) { 
 	//Load image at specified path
     SDL_Surface* loadedSurface = SDL_LoadBMP( path.c_str() ); if( loadedSurface == NULL ) { 
         printf( "Unable to load image %s! SDL Error: %s\n", path.c_str(), SDL_GetError() );
@@ -91,6 +85,8 @@ SDL_Surface* loadSurface( std::string path ) {
 
 int main( int argc, char* args[] )
 {
+	bool quit = false;
+
 	//Start up SDL and create window
 	if( !init() )
 	{
@@ -99,14 +95,18 @@ int main( int argc, char* args[] )
 	}
 
     //The image we will load and show on the screen
-    SDL_Surface* gHelloWorld = loadSurface("man.bmp");
+    SDL_Surface* gHelloWorld = loadBMPSurface("man.bmp");
     if( gHelloWorld == NULL) {
         quit = true;
     }
 
-    //Event handler
 	int x = 10;
 	int y = 10;
+	SDL_Rect manRect;
+	manRect.x = x;
+	manRect.y = y;
+	manRect.w = 40;
+	manRect.h = 40;
 
     while(!quit) {
         //Handle events on queue
@@ -133,14 +133,10 @@ int main( int argc, char* args[] )
 			y++;
 		}
 
-
-		SDL_Rect man;
-		man.x = x;
-		man.y = y;
-		man.w = 40;
-		man.h = 40;
-
-		SDL_BlitScaled( gHelloWorld, NULL, gScreenSurface, &man );
+		manRect.x =+ x;
+		manRect.y =+ y;
+		
+		SDL_BlitScaled( gHelloWorld, NULL, gScreenSurface, &manRect );
 
         // Use this for any background image
         // SDL_BlitSurface( gHelloWorld, NULL, gScreenSurface, NULL );
