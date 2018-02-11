@@ -95,8 +95,14 @@ int main( int argc, char* args[] )
 	}
 
     //The image we will load and show on the screen
-    SDL_Surface* gHelloWorld = loadBMPSurface("man.bmp");
-    if( gHelloWorld == NULL) {
+    SDL_Surface* gMan = loadBMPSurface("man.bmp");
+    if( gMan == NULL) {
+        quit = true;
+    }
+
+	// Background image
+    SDL_Surface* gBackground = loadBMPSurface("space.bmp");
+    if( gBackground == NULL) {
         quit = true;
     }
 
@@ -109,6 +115,9 @@ int main( int argc, char* args[] )
 	manRect.h = 40;
 
     while(!quit) {
+		// fill screen with background image
+        SDL_BlitSurface( gBackground, NULL, gScreenSurface, NULL );
+
         //Handle events on queue
         std::set<INPUT> inputs = getInputs();
 
@@ -136,10 +145,7 @@ int main( int argc, char* args[] )
 		manRect.x =+ x;
 		manRect.y =+ y;
 		
-		SDL_BlitScaled( gHelloWorld, NULL, gScreenSurface, &manRect );
-
-        // Use this for any background image
-        // SDL_BlitSurface( gHelloWorld, NULL, gScreenSurface, NULL );
+		SDL_BlitScaled( gMan, NULL, gScreenSurface, &manRect );
         
         //Update the surface
         SDL_UpdateWindowSurface( gWindow );
@@ -147,9 +153,11 @@ int main( int argc, char* args[] )
 		SDL_Delay( 16 );
     }
 
-    //Deallocate surface
-	SDL_FreeSurface( gHelloWorld );
-	gHelloWorld = NULL;
+    //Deallocate surfaces
+	SDL_FreeSurface( gMan );
+	gMan = NULL;
+	SDL_FreeSurface( gBackground );
+	gBackground = NULL;
 
 	//Free resources and close SDL
 	close();
