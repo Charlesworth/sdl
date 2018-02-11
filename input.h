@@ -1,6 +1,8 @@
 #ifndef INPUT_H
 #define INPUT_H
 
+#include <set>
+
 //Key press surfaces constants 
 enum INPUT { 
     NO_INPUT, 
@@ -12,5 +14,7 @@ enum INPUT {
 };
 
 INPUT getInput();
+
+std::set<INPUT> getInputs();
  
 #endif

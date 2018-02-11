@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include <string>
 #include "input.h"
+#include <vector>
+#include <iterator>
 
 //Screen dimension constants
 const int SCREEN_WIDTH = 640;
@@ -103,31 +105,38 @@ int main( int argc, char* args[] )
     }
 
     //Event handler
-    INPUT i = NO_INPUT;
 	int x = 10;
+	int y = 10;
 
     while(!quit) {
         //Handle events on queue
-        i = getInput();
+        std::set<INPUT> inputs = getInputs();
 
-        if( i == INPUT::QUIT ) { 
-            //User requests quit 
-            quit = true; 
-        }
+		if( inputs.count(INPUT::QUIT) ) { 
+			//User requests quit 
+			quit = true; 
+		}
 
-
-		if ( i == INPUT::LEFT ) {
+		if ( inputs.count(INPUT::LEFT) ) {
 			x--;
 		}
 
-
-		if ( i == INPUT::RIGHT ) {
+		if ( inputs.count(INPUT::RIGHT) ) {
 			x++;
 		}
 
+		if ( inputs.count(INPUT::UP) ) {
+			y--;
+		}
+
+		if ( inputs.count(INPUT::DOWN) ) {
+			y++;
+		}
+
+
 		SDL_Rect man;
 		man.x = x;
-		man.y = 30;
+		man.y = y;
 		man.w = 40;
 		man.h = 40;
 
