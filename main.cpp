@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <string>
 #include "input.h"
+#include "player.h"
 #include <vector>
 #include <iterator>
 
@@ -94,25 +95,17 @@ int main( int argc, char* args[] )
         return 1;
 	}
 
-    //The image we will load and show on the screen
-    SDL_Surface* gMan = loadBMPSurface("assets/man.bmp");
-    if( gMan == NULL) {
+	SDL_Surface* playerTexture = loadBMPSurface("assets/man.bmp");
+    if( playerTexture == NULL) {
         quit = true;
     }
+	// Player charlie = Player( playerTexture );
 
 	// Background image
     SDL_Surface* gBackground = loadBMPSurface("assets/space.bmp");
     if( gBackground == NULL) {
         quit = true;
     }
-
-	int x = 10;
-	int y = 10;
-	SDL_Rect manRect;
-	manRect.x = x;
-	manRect.y = y;
-	manRect.w = 40;
-	manRect.h = 40;
 
     while(!quit) {
 		// fill screen with background image
@@ -125,27 +118,9 @@ int main( int argc, char* args[] )
 			//User requests quit 
 			quit = true; 
 		}
-
-		if ( inputs.count(INPUT::LEFT) ) {
-			x--;
-		}
-
-		if ( inputs.count(INPUT::RIGHT) ) {
-			x++;
-		}
-
-		if ( inputs.count(INPUT::UP) ) {
-			y--;
-		}
-
-		if ( inputs.count(INPUT::DOWN) ) {
-			y++;
-		}
-
-		manRect.x =+ x;
-		manRect.y =+ y;
 		
-		SDL_BlitScaled( gMan, NULL, gScreenSurface, &manRect );
+		// charlie.handleInputs( inputs );
+		// charlie.render( gScreenSurface );
         
         //Update the surface
         SDL_UpdateWindowSurface( gWindow );
@@ -154,8 +129,6 @@ int main( int argc, char* args[] )
     }
 
     //Deallocate surfaces
-	SDL_FreeSurface( gMan );
-	gMan = NULL;
 	SDL_FreeSurface( gBackground );
 	gBackground = NULL;
 
