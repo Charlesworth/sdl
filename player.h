@@ -8,10 +8,13 @@
 class Player
 {
     public:
-		//Initializes the variables
-		Player( SDL_Surface* );
+		//Initializes the player with default starting posX and posY
+		Player( SDL_Surface* playerTexture );
+		
+		//Initializes the player with defined posX and posY
+		Player( SDL_Surface* playerTexture, int posX, int posY );
 
-        //Destroys the variables
+        //Destroys the player
 		~Player();
 
 		//Takes player input and does stuff

@@ -76,32 +76,40 @@ std::vector<INPUT> getKeydownInputs() {
 }
 
 std::set<INPUT> getInputs() {
-    const Uint8 *keys = SDL_GetKeyboardState(NULL);
-    std::set<INPUT> inputSet;
     SDL_Event e;
-
+    
     while ( SDL_PollEvent( &e ) != 0 ) {
         // Check for quit events
-        if( e.type == SDL_QUIT || keys[SDL_SCANCODE_ESCAPE] ) {
-            std::set<INPUT> quitSet = {QUIT};
-            return quitSet;
+        if( e.type == SDL_QUIT ) {
+            return std::set<INPUT>{QUIT};
         }
+    }
+    
+    // All events must be processed before checking GetKeyboardState
+    const Uint8 *keys = SDL_GetKeyboardState(NULL);
+    
+    // Check for quit keys
+    if( keys[SDL_SCANCODE_ESCAPE] ) {
+        return std::set<INPUT>{QUIT};
+    }
+    
+    // Process key presses
+    std::set<INPUT> inputSet;
 
-        if (keys[SDL_SCANCODE_W] || keys[SDL_SCANCODE_UP]){
-            inputSet.insert(UP);
-        }
+    if (keys[SDL_SCANCODE_W] || keys[SDL_SCANCODE_UP]){
+        inputSet.insert(UP);
+    }
 
-        if (keys[SDL_SCANCODE_S] || keys[SDL_SCANCODE_DOWN]){
-            inputSet.insert(DOWN);
-        }
+    if (keys[SDL_SCANCODE_S] || keys[SDL_SCANCODE_DOWN]){
+        inputSet.insert(DOWN);
+    }
 
-        if (keys[SDL_SCANCODE_A] || keys[SDL_SCANCODE_LEFT]){
-            inputSet.insert(LEFT);
-        }
+    if (keys[SDL_SCANCODE_A] || keys[SDL_SCANCODE_LEFT]){
+        inputSet.insert(LEFT);
+    }
 
-        if (keys[SDL_SCANCODE_D] || keys[SDL_SCANCODE_RIGHT]){
-            inputSet.insert(RIGHT);
-        }
+    if (keys[SDL_SCANCODE_D] || keys[SDL_SCANCODE_RIGHT]){
+        inputSet.insert(RIGHT);
     }
     return inputSet;
 }

@@ -13,16 +13,19 @@ class Player
 		//Maximum axis velocity of the player
 		static const int PLAYER_VEL = 10;
 
-		//Initializes the variables
-		Player( SDL_Surface* );
+		//Initializes the player with default starting posX and posY
+		Player( SDL_Surface* playerTexture );
 
-        //Destroys the variables
+		//Initializes the player with defined posX and posY
+        Player( SDL_Surface* playerTexture, int posX, int posY );
+        
+        //Destroys the player
 		~Player();
 
 		//Takes player input and does stuff
 		void handleInputs( std::set<INPUT> );
 
-		//Shows the dot on the screen
+		//Render the player onto the screen
 		void render( SDL_Surface* );
 
     private:
@@ -30,10 +33,18 @@ class Player
         SDL_Rect _rect;    
 };
 
-Player::Player( SDL_Surface* inputTexture ) : _texture(inputTexture)
+Player::Player( SDL_Surface* playerTexture ) : _texture(playerTexture)
 {
     _rect.x = 30;
 	_rect.y = 30;
+	_rect.w = PLAYER_WIDTH;
+	_rect.h = PLAYER_HEIGHT;
+}
+
+Player::Player( SDL_Surface* inputTexture, int posX, int posY ) : _texture(inputTexture)
+{
+    _rect.x = posX;
+	_rect.y = posY;
 	_rect.w = PLAYER_WIDTH;
 	_rect.h = PLAYER_HEIGHT;
 }

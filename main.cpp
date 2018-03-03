@@ -101,21 +101,24 @@ int main( int argc, char* args[] )
 		quit = true;
 	}	
 
-	Player* charlie = new Player( playerTexture );
+	// Player* charlie = new Player( playerTexture );
+	Player* charlie = new Player( playerTexture, 100, 150 );
 	
 	// Background image
     SDL_Surface* gBackground = loadBMPSurface("assets/space.bmp");
     if( gBackground == NULL) {
 		quit = true;
-    }
+	}
+	
+	int tick = 0;
 	
     while(!quit) {
 		// fill screen with background image
         SDL_BlitSurface( gBackground, NULL, gScreenSurface, NULL );
 		
-        //Handle events on queue
-        std::set<INPUT> inputs = getInputs();
-		
+        //Handle events
+		std::set<INPUT> inputs = getInputs();
+				
 		if( inputs.count(INPUT::QUIT) ) { 
 			//User requests quit 
 			quit = true; 
@@ -128,6 +131,7 @@ int main( int argc, char* args[] )
         SDL_UpdateWindowSurface( gWindow );
 		
 		SDL_Delay( 16 );
+		tick++;
     }
 	
     //Deallocate surfaces
