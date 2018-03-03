@@ -6,6 +6,7 @@
 #include "player.h"
 #include <vector>
 #include <iterator>
+#include <memory>
 
 //Screen dimension constants
 const int SCREEN_WIDTH = 640;
@@ -37,7 +38,7 @@ bool init()
 	else
 	{
 		//Create window
-		gWindow = SDL_CreateWindow( "SDL Tutorial", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN );
+		gWindow = SDL_CreateWindow( "SDL", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN );
 		if( gWindow == NULL )
 		{
 			printf( "Window could not be created! SDL_Error: %s\n", SDL_GetError() );
@@ -94,46 +95,49 @@ int main( int argc, char* args[] )
 		printf( "Failed to initialize!\n" );
         return 1;
 	}
-
+	
 	SDL_Surface* playerTexture = loadBMPSurface("assets/man.bmp");
     if( playerTexture == NULL) {
-        quit = true;
-    }
-	// Player charlie = Player( playerTexture );
+		quit = true;
+	}	
 
+	Player* charlie = new Player( playerTexture );
+	
 	// Background image
     SDL_Surface* gBackground = loadBMPSurface("assets/space.bmp");
     if( gBackground == NULL) {
-        quit = true;
+		quit = true;
     }
-
+	
     while(!quit) {
 		// fill screen with background image
         SDL_BlitSurface( gBackground, NULL, gScreenSurface, NULL );
-
+		
         //Handle events on queue
         std::set<INPUT> inputs = getInputs();
-
+		
 		if( inputs.count(INPUT::QUIT) ) { 
 			//User requests quit 
 			quit = true; 
 		}
 		
-		// charlie.handleInputs( inputs );
-		// charlie.render( gScreenSurface );
+		charlie->handleInputs( inputs );
+		charlie->render( gScreenSurface );
         
         //Update the surface
         SDL_UpdateWindowSurface( gWindow );
-
+		
 		SDL_Delay( 16 );
     }
-
+	
     //Deallocate surfaces
 	SDL_FreeSurface( gBackground );
 	gBackground = NULL;
-
+	
+	delete charlie;
+	
 	//Free resources and close SDL
 	close();
-
+	
 	return 0;
 }

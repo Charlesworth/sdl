@@ -26,46 +26,43 @@ class Player
 		void render( SDL_Surface* );
 
     private:
-        SDL_Surface* texture;
-        SDL_Rect rect;    
+        SDL_Surface* _texture;
+        SDL_Rect _rect;    
 };
 
-Player::Player( SDL_Surface* inputTexture )
+Player::Player( SDL_Surface* inputTexture ) : _texture(inputTexture)
 {
-    rect.x = 30;
-	rect.y = 30;
-	rect.w = PLAYER_WIDTH;
-	rect.h = PLAYER_HEIGHT;
-
-    SDL_Surface* texture = new SDL_Surface;
-    texture = inputTexture;
+    _rect.x = 30;
+	_rect.y = 30;
+	_rect.w = PLAYER_WIDTH;
+	_rect.h = PLAYER_HEIGHT;
 }
 
 Player::~Player()
 {
-    SDL_FreeSurface( texture );
-    texture = NULL;
+    SDL_FreeSurface( _texture );
+    _texture = NULL;
 }
 
 void Player::render( SDL_Surface* screenSurface )
 {
-    SDL_BlitScaled( texture, NULL, screenSurface, &rect );
+    SDL_BlitScaled( _texture, NULL, screenSurface, &_rect );
 }
 
 void Player::handleInputs( std::set<INPUT> inputs ) {
     if ( inputs.count(INPUT::LEFT) ) {
-        rect.x--;
+        _rect.x--;
     }
 
     if ( inputs.count(INPUT::RIGHT) ) {
-        rect.x++;
+        _rect.x++;
     }
 
     if ( inputs.count(INPUT::UP) ) {
-        rect.y--;
+        _rect.y--;
     }
 
     if ( inputs.count(INPUT::DOWN) ) {
-        rect.y++;
+        _rect.y++;
     }
 }
