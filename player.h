@@ -1,27 +1,43 @@
-#ifndef PLAYER_H
-#define PLAYER_H
+// Copyright 2018 Charles Cochrane
+
+#ifndef PLAYER_H_
+#define PLAYER_H_
 
 #include <set>
 #include "SDL2/SDL.h"
-#include "input.h"
+#include "./input.h"
 
-class Player
-{
-    public:
-		//Initializes the player with default starting posX and posY
-		Player( SDL_Surface* playerTexture );
-		
-		//Initializes the player with defined posX and posY
-		Player( SDL_Surface* playerTexture, int posX, int posY );
+class Player {
+ public:
+    // The dimensions of the player
+    static const int k_player_width = 20;
+    static const int k_player_height = 20;
 
-        //Destroys the player
-		~Player();
+    // Axis and horizontal velocity of the player
+    static const int k_player_axis_vel = 10;
+    static const int k_player_horizontal_vel = 7;
 
-		//Takes player input and does stuff
-		void handleInputs( std::set<INPUT> );
+    float x_position;
+    float y_position;
 
-		//Shows the dot on the screen
-		void render( SDL_Surface* );
+    // Initializes the player with default starting x_position and y_position
+    explicit Player(SDL_Surface* player_texture);
+
+    // Initializes the player with defined x_position and y_position
+    Player(SDL_Surface* player_texture, float x_position, float y_position);
+
+    // Destroys the player
+    ~Player();
+
+    // Takes player input and does stuff
+    void handleInputs(std::set<INPUT>);
+
+    // Render the player onto the screen
+    void render(SDL_Surface*);
+
+ private:
+    SDL_Surface* texture_;
+    SDL_Rect rect_;
 };
- 
-#endif
+
+#endif  // PLAYER_H_

@@ -1,87 +1,58 @@
-#include "SDL2/SDL.h"
-#include "input.h"
+// Copyright 2018 Charles Cochrane
+
+#include "./player.h"
+
 #include <stdio.h>
 #include <vector>
 
-class Player
-{
-    public:
-		//The dimensions of the player
-		static const int PLAYER_WIDTH = 20;
-		static const int PLAYER_HEIGHT = 20;
+#include "SDL2/SDL.h"
 
-		//Maximum axis velocity of the player
-		static const int PLAYER_AXIS_VEL = 10;
-        static const int PLAYER_HORIZONTAL_VEL = 7;
+#include "./input.h"
 
-		//Initializes the player with default starting posX and posY
-		Player( SDL_Surface* playerTexture );
-
-		//Initializes the player with defined posX and posY
-        Player( SDL_Surface* playerTexture, int posX, int posY );
-        
-        //Destroys the player
-		~Player();
-
-		//Takes player input and does stuff
-		void handleInputs( std::set<INPUT> );
-
-		//Render the player onto the screen
-		void render( SDL_Surface* );
-
-    private:
-        SDL_Surface* _texture;
-        SDL_Rect _rect;    
-};
-
-Player::Player( SDL_Surface* playerTexture ) : _texture(playerTexture)
-{
-    _rect.x = 30;
-	_rect.y = 30;
-	_rect.w = PLAYER_WIDTH;
-	_rect.h = PLAYER_HEIGHT;
+Player::Player(SDL_Surface* player_texture) : texture_(player_texture) {
+  x_position = 100.0;
+  y_position = 100.0;
+  rect_.w = k_player_width;
+  rect_.h = k_player_height;
 }
 
-Player::Player( SDL_Surface* inputTexture, int posX, int posY ) : _texture(inputTexture)
-{
-    _rect.x = posX;
-	_rect.y = posY;
-	_rect.w = PLAYER_WIDTH;
-	_rect.h = PLAYER_HEIGHT;
+Player::Player(SDL_Surface* player_texture, float x_position, float y_position) :
+texture_(player_texture), x_position(x_position), y_position(y_position) {
+  rect_.w = k_player_width;
+  rect_.h = k_player_height;
 }
 
-Player::~Player()
-{
-    SDL_FreeSurface( _texture );
-    _texture = NULL;
+Player::~Player() {
+  SDL_FreeSurface(texture_);
+  texture_ = NULL;
 }
 
-void Player::render( SDL_Surface* screenSurface )
-{
-    SDL_BlitScaled( _texture, NULL, screenSurface, &_rect );
+void Player::render(SDL_Surface* screenSurface) {
+  SDL_BlitScaled(texture_, NULL, screenSurface, &rect_);
 }
 
-void Player::handleInputs( std::set<INPUT> inputs ) {
-    float velocity;
-    if ( ( inputs.count(INPUT::LEFT) || inputs.count(INPUT::RIGHT) ) && ( inputs.count(INPUT::UP) || inputs.count(INPUT::DOWN) ) ) {
-        velocity = PLAYER_HORIZONTAL_VEL;
-    } else {
-        velocity = PLAYER_AXIS_VEL;    
-    }
+void Player::handleInputs(std::set<INPUT> inputs) {
+  float velocity;
+  if ((inputs.count(INPUT::LEFT) || inputs.count(INPUT::RIGHT)) &&
+  (inputs.count(INPUT::UP) || inputs.count(INPUT::DOWN))) {
+    velocity = k_player_horizontal_vel;
+  } else {
+    velocity = k_player_axis_vel;
+  }
 
-    if ( inputs.count(INPUT::LEFT) ) {
-        _rect.x -= velocity;
-    }
+  if ( inputs.count(INPUT::LEFT) ) {
+    rect_.x -= velocity;
+  }
 
-    if ( inputs.count(INPUT::RIGHT) ) {
-        _rect.x += velocity;
-    }
+  if ( inputs.count(INPUT::RIGHT) ) {
+    rect_.x += velocity;
+  }
 
-    if ( inputs.count(INPUT::UP) ) {
-        _rect.y -= velocity;
-    }
+  if ( inputs.count(INPUT::UP) ) {
+    rect_.y -= velocity;
+  }
 
-    if ( inputs.count(INPUT::DOWN) ) {
-        _rect.y += velocity;
-    }
+  if ( inputs.count(INPUT::DOWN) ) {
+    rect_.y += velocity;
+  }
 }
