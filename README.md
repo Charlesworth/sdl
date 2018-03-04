@@ -26,6 +26,11 @@ snake_case, no caps, Prefix `k_`
     const int k_days_in_week = 7;
     const int k_days_in_week_ = 7; // private contant in a class
 
+#### Constants
+snake_case, no caps, Prefix `g_`, shouldn't be any!
+
+    const SDL_Window* g_window;
+
 #### Types and Functions
 Camal Case, leading cap
 

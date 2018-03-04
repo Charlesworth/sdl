@@ -27,11 +27,11 @@ Player::~Player() {
   texture_ = NULL;
 }
 
-void Player::render(SDL_Surface* screenSurface) {
+void Player::Render(SDL_Surface* screenSurface) {
   SDL_BlitScaled(texture_, NULL, screenSurface, &rect_);
 }
 
-void Player::handleInputs(std::set<INPUT> inputs) {
+void Player::HandleInputs(std::set<INPUT> inputs) {
   float velocity;
   if ((inputs.count(INPUT::LEFT) || inputs.count(INPUT::RIGHT)) &&
   (inputs.count(INPUT::UP) || inputs.count(INPUT::DOWN))) {

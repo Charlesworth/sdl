@@ -1,147 +1,149 @@
-//Using SDL and standard IO
-#include "SDL2/SDL.h"
+// Copyright 2018 Charles Cochrane
+
 #include <stdio.h>
 #include <string>
-#include "input.h"
-#include "player.h"
 #include <vector>
 #include <iterator>
 #include <memory>
 
-//Screen dimension constants
-const int SCREEN_WIDTH = 640;
-const int SCREEN_HEIGHT = 480;
+#include "SDL2/SDL.h"
 
-//Starts up SDL and creates window
-bool init();
+#include "./input.h"
+#include "./player.h"
 
-//Frees media and shuts down SDL
-void close();
+// Screen dimension constants
+const int k_screen_width = 640;
+const int k_screen_height = 480;
 
-//The window we'll be rendering to
-SDL_Window* gWindow = NULL;
-	
-//The surface contained by the window
-SDL_Surface* gScreenSurface = NULL;
+// Frame rate constants
+const int k_60_fsp_single_frame_ms = 16;
+const int k_30_fsp_single_frame_ms = 32;
+const int k_1_fsp_single_frame_ms = 1000;
 
-bool init()
-{
-	//Initialization flag
-	bool success = true;
+// TODO(charlesworth) remove as a global var
+// The window we'll be rendering to
+SDL_Window* g_sdl_window = NULL;
 
-	//Initialize SDL
-	if( SDL_Init( SDL_INIT_VIDEO | SDL_INIT_AUDIO ) < 0 )
-	{
-		printf( "SDL could not initialize! SDL_Error: %s\n", SDL_GetError() );
-		success = false;
-	}
-	else
-	{
-		//Create window
-		gWindow = SDL_CreateWindow( "SDL", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN );
-		if( gWindow == NULL )
-		{
-			printf( "Window could not be created! SDL_Error: %s\n", SDL_GetError() );
-			success = false;
-		}
-		else
-		{
-			//Get window surface
-			gScreenSurface = SDL_GetWindowSurface( gWindow );
-		}
-	}
+// TODO(charlesworth) remove as a global var
+// The surface contained by the window
+SDL_Surface* g_sdl_screen_surface = NULL;
 
-	return success;
+// Starts up SDL and creates window
+bool Init() {
+  // Initialization flag
+  bool success = true;
+
+  // Initialize SDL
+  if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) < 0) {
+    printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
+    success = false;
+  } else {
+    // Create window
+    g_sdl_window = SDL_CreateWindow(
+      "SDL",
+      SDL_WINDOWPOS_UNDEFINED,
+      SDL_WINDOWPOS_UNDEFINED,
+      k_screen_width,
+      k_screen_height,
+      SDL_WINDOW_SHOWN);
+
+    if (g_sdl_window == NULL) {
+      printf("Window could not be created! SDL_Error: %s\n", SDL_GetError());
+      success = false;
+    } else {
+      // Get window surface
+      g_sdl_screen_surface = SDL_GetWindowSurface(g_sdl_window);
+    }
+  }
+
+  return success;
 }
 
-void close()
-{
-	//Destroy window
-	SDL_DestroyWindow( gWindow );
-	gWindow = NULL;
+// Frees media and shuts down SDL
+void Close() {
+  // Destroy window
+  SDL_DestroyWindow(g_sdl_window);
+  g_sdl_window = NULL;
 
-	//Quit SDL subsystems
-	SDL_Quit();
+  // Quit SDL subsystems
+  SDL_Quit();
 }
 
-//Load image at specified path 
-SDL_Surface* loadBMPSurface( std::string path ) { 
-	//Load image at specified path
-    SDL_Surface* loadedSurface = SDL_LoadBMP( path.c_str() ); if( loadedSurface == NULL ) { 
-        printf( "Unable to load image %s! SDL Error: %s\n", path.c_str(), SDL_GetError() );
-		return NULL;
+// Load image at specified path
+SDL_Surface* LoadBMPSurface(std::string path) {
+  SDL_Surface* loaded_surface = SDL_LoadBMP(path.c_str());
+  if (loaded_surface == NULL) {
+    printf("Unable to load image %s! SDL Error: %s\n", path.c_str(), SDL_GetError());
+    return NULL;
+  }
+
+  // Convert surface to screen format
+  SDL_Surface* optimized_surface = SDL_ConvertSurface(loaded_surface, g_sdl_screen_surface->format, 0);
+  if (optimized_surface == NULL) {
+    printf("Unable to optimize image %s! SDL Error: %s\n", path.c_str(), SDL_GetError());
+    return NULL;
+  }
+
+  // Get rid of old loaded surface
+  SDL_FreeSurface(loaded_surface);
+
+  return optimized_surface;
+}
+
+int main(int argc, char* args[]) {
+  bool quit = false;
+
+  // Start up SDL and create window
+  if (!Init()) {
+    printf("Failed to initialize!\n");
+    return 1;
+  }
+
+  SDL_Surface* player_texture = LoadBMPSurface("assets/man.bmp");
+  if (player_texture == NULL) {
+    quit = true;
+  }
+
+  Player* charlie = new Player(player_texture, 100, 150);
+
+  // Background image
+  SDL_Surface* background_texture = LoadBMPSurface("assets/space.bmp");
+  if (background_texture == NULL) {
+    quit = true;
+  }
+
+  int tick = 0;
+
+  while (!quit) {
+    // Fill screen with background image
+    SDL_BlitSurface(background_texture, NULL, g_sdl_screen_surface, NULL);
+
+    // Handle events
+    std::set<INPUT> inputs = getInputs();
+
+    if (inputs.count(INPUT::QUIT)) {
+      // User requests quit
+      quit = true;
     }
 
-	//Convert surface to screen format
-	SDL_Surface* optimizedSurface = SDL_ConvertSurface( loadedSurface, gScreenSurface->format, 0);
-	if( optimizedSurface == NULL ){
-		printf( "Unable to optimize image %s! SDL Error: %s\n", path.c_str(), SDL_GetError() );
-		return NULL;
-	}
+    charlie->HandleInputs(inputs);
+    charlie->Render(g_sdl_screen_surface);
 
-	//Get rid of old loaded surface 
-	SDL_FreeSurface( loadedSurface );
-    
-	return optimizedSurface; 
-}
+    // Update the surface
+    SDL_UpdateWindowSurface(g_sdl_window);
 
-int main( int argc, char* args[] )
-{
-	bool quit = false;
+    SDL_Delay(k_60_fsp_single_frame_ms);
+    tick++;
+  }
 
-	//Start up SDL and create window
-	if( !init() )
-	{
-		printf( "Failed to initialize!\n" );
-        return 1;
-	}
-	
-	SDL_Surface* playerTexture = loadBMPSurface("assets/man.bmp");
-    if( playerTexture == NULL) {
-		quit = true;
-	}	
+  // Deallocate surfaces
+  SDL_FreeSurface(background_texture);
+  background_texture = NULL;
 
-	// Player* charlie = new Player( playerTexture );
-	Player* charlie = new Player( playerTexture, 100, 150 );
-	
-	// Background image
-    SDL_Surface* gBackground = loadBMPSurface("assets/space.bmp");
-    if( gBackground == NULL) {
-		quit = true;
-	}
-	
-	int tick = 0;
-	
-    while(!quit) {
-		// fill screen with background image
-        SDL_BlitSurface( gBackground, NULL, gScreenSurface, NULL );
-		
-        //Handle events
-		std::set<INPUT> inputs = getInputs();
-				
-		if( inputs.count(INPUT::QUIT) ) { 
-			//User requests quit 
-			quit = true; 
-		}
-		
-		charlie->handleInputs( inputs );
-		charlie->render( gScreenSurface );
-        
-        //Update the surface
-        SDL_UpdateWindowSurface( gWindow );
-		
-		SDL_Delay( 16 );
-		tick++;
-    }
-	
-    //Deallocate surfaces
-	SDL_FreeSurface( gBackground );
-	gBackground = NULL;
-	
-	delete charlie;
-	
-	//Free resources and close SDL
-	close();
-	
-	return 0;
+  delete charlie;
+
+  // Free resources and close SDL
+  Close();
+
+  return 0;
 }
