@@ -1,20 +1,20 @@
-#ifndef INPUT_H
-#define INPUT_H
+// Copyright 2018 Charles Cochrane
+
+#ifndef INPUT_H_
+#define INPUT_H_
 
 #include <set>
 
-//Key press surfaces constants 
-enum INPUT { 
-    NO_INPUT, 
-    UP, 
-    DOWN, 
-    LEFT, 
-    RIGHT, 
-    QUIT 
+// Player input enum
+enum Input {
+    NO_INPUT,
+    UP,
+    DOWN,
+    LEFT,
+    RIGHT,
+    QUIT
 };
 
-INPUT getInput();
+std::set<Input> GetInputs();
 
-std::set<INPUT> getInputs();
- 
-#endif
+#endif  // INPUT_H_

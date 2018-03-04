@@ -31,28 +31,28 @@ void Player::Render(SDL_Surface* screenSurface) {
   SDL_BlitScaled(texture_, NULL, screenSurface, &rect_);
 }
 
-void Player::HandleInputs(std::set<INPUT> inputs) {
+void Player::HandleInputs(std::set<Input> inputs) {
   float velocity;
-  if ((inputs.count(INPUT::LEFT) || inputs.count(INPUT::RIGHT)) &&
-  (inputs.count(INPUT::UP) || inputs.count(INPUT::DOWN))) {
+  if ((inputs.count(Input::LEFT) || inputs.count(Input::RIGHT)) &&
+  (inputs.count(Input::UP) || inputs.count(Input::DOWN))) {
     velocity = k_player_horizontal_vel;
   } else {
     velocity = k_player_axis_vel;
   }
 
-  if ( inputs.count(INPUT::LEFT) ) {
+  if ( inputs.count(Input::LEFT) ) {
     rect_.x -= velocity;
   }
 
-  if ( inputs.count(INPUT::RIGHT) ) {
+  if ( inputs.count(Input::RIGHT) ) {
     rect_.x += velocity;
   }
 
-  if ( inputs.count(INPUT::UP) ) {
+  if ( inputs.count(Input::UP) ) {
     rect_.y -= velocity;
   }
 
-  if ( inputs.count(INPUT::DOWN) ) {
+  if ( inputs.count(Input::DOWN) ) {
     rect_.y += velocity;
   }
 }

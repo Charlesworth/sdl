@@ -32,7 +32,7 @@ class Player {
     ~Player();
 
     // Takes player input and does stuff
-    void HandleInputs(std::set<INPUT>);
+    void HandleInputs(std::set<Input>);
 
     // Render the player onto the screen
     void Render(SDL_Surface*);

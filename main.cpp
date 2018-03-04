@@ -11,6 +11,7 @@
 #include "./input.h"
 #include "./player.h"
 
+// TODO(charlesworth) namespace all globals
 // Screen dimension constants
 const int k_screen_width = 640;
 const int k_screen_height = 480;
@@ -119,9 +120,9 @@ int main(int argc, char* args[]) {
     SDL_BlitSurface(background_texture, NULL, g_sdl_screen_surface, NULL);
 
     // Handle events
-    std::set<INPUT> inputs = getInputs();
+    std::set<Input> inputs = GetInputs();
 
-    if (inputs.count(INPUT::QUIT)) {
+    if (inputs.count(Input::QUIT)) {
       // User requests quit
       quit = true;
     }
