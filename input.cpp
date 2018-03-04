@@ -28,6 +28,10 @@ std::set<Input> GetInputs() {
   // Process key presses
   std::set<Input> inputSet;
 
+  if (keys[SDL_SCANCODE_RETURN]) {
+      inputSet.insert(ENTER);
+  }
+
   if (keys[SDL_SCANCODE_W] || keys[SDL_SCANCODE_UP]) {
       inputSet.insert(UP);
   }

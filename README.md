@@ -1,9 +1,19 @@
 # SDL engine play around
 
-## TODO
+## TODO Larger Goals
 
 - Figure out the best way to render game objects. I don't think that the object should contain any render specific code, but should contain everything the render needs (i.e. the texture or in the future sprites)
 - Game objects should be stored on the heap, I'll eventually need a collection to put them all in. This has conitations on how the objects should be indexed in this container, i.e. by position.
+
+## TODO Smaller tasks
+
+Always pleanty of TODOs in the code to grep through, here some others that don't belong in comment form:
+
+- Remove all globals from main.ccp
+- Find proper structure for a cpp project's source files
+- Choose a build scripting methodology, something better than my build script
+- Produce a renderer class and remove all SDL from the player and main files
+- Add frame rate instrumentations
 
 ## Style Guide
 

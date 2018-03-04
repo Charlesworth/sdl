@@ -7,11 +7,11 @@
 
 // Player input enum
 enum Input {
-    NO_INPUT,
     UP,
     DOWN,
     LEFT,
     RIGHT,
+    ENTER,
     QUIT
 };
 

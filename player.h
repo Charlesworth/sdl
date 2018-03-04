@@ -23,10 +23,10 @@ class Player {
     float y_position;
 
     // Initializes the player with default starting x_position and y_position
-    explicit Player(SDL_Surface* player_texture);
+    explicit Player(SDL_Texture* player_texture);
 
     // Initializes the player with defined x_position and y_position
-    Player(SDL_Surface* player_texture, float x_position, float y_position);
+    Player(SDL_Texture* player_texture, float x_position, float y_position);
 
     // Destroys the player
     ~Player();
@@ -35,10 +35,10 @@ class Player {
     void HandleInputs(std::set<Input>);
 
     // Render the player onto the screen
-    void Render(SDL_Surface*);
+    void Render(SDL_Renderer*);
 
  private:
-    SDL_Surface* texture_;
+    SDL_Texture* texture_;
     SDL_Rect rect_;
 };
 
