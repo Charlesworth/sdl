@@ -16,8 +16,8 @@ class Player {
     static const int k_player_height = 20;
 
     // Axis and horizontal velocity of the player
-    static const int k_player_axis_vel = 10;
-    static const int k_player_horizontal_vel = 7;
+    static constexpr float k_player_axis_vel = 1.0;
+    static constexpr float k_player_horizontal_vel = 0.7;
 
     float x_position;
     float y_position;
