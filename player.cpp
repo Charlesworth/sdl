@@ -11,7 +11,8 @@ class Player
 		static const int PLAYER_HEIGHT = 20;
 
 		//Maximum axis velocity of the player
-		static const int PLAYER_VEL = 10;
+		static const int PLAYER_AXIS_VEL = 10;
+        static const int PLAYER_HORIZONTAL_VEL = 7;
 
 		//Initializes the player with default starting posX and posY
 		Player( SDL_Surface* playerTexture );
@@ -61,19 +62,26 @@ void Player::render( SDL_Surface* screenSurface )
 }
 
 void Player::handleInputs( std::set<INPUT> inputs ) {
+    float velocity;
+    if ( ( inputs.count(INPUT::LEFT) || inputs.count(INPUT::RIGHT) ) && ( inputs.count(INPUT::UP) || inputs.count(INPUT::DOWN) ) ) {
+        velocity = PLAYER_HORIZONTAL_VEL;
+    } else {
+        velocity = PLAYER_AXIS_VEL;    
+    }
+
     if ( inputs.count(INPUT::LEFT) ) {
-        _rect.x--;
+        _rect.x -= velocity;
     }
 
     if ( inputs.count(INPUT::RIGHT) ) {
-        _rect.x++;
+        _rect.x += velocity;
     }
 
     if ( inputs.count(INPUT::UP) ) {
-        _rect.y--;
+        _rect.y -= velocity;
     }
 
     if ( inputs.count(INPUT::DOWN) ) {
-        _rect.y++;
+        _rect.y += velocity;
     }
 }
