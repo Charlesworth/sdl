@@ -1,11 +1,12 @@
 // Copyright 2018 Charles Cochrane
 
+#include "./renderer.h"
+
 #include <string>
 
 #include "SDL2/SDL.h"
 #include "SDL2/SDL_image.h"
 
-#include "./renderer.h"
 
 
 // TODO(charlesworth) namespace all globals
@@ -134,4 +135,29 @@ SDL_Texture* Renderer::loadTexture(std::string path) {
   SDL_FreeSurface(loadedSurface);
 
   return newTexture;
+}
+
+void Renderer::Render(SDL_Texture* texture, SDL_Rect* rect) {
+  SDL_RenderCopy(renderer_, texture, NULL, rect);
+}
+
+Renderer::~Renderer() {
+  // Destroy window
+  SDL_DestroyWindow(window_);
+  window_ = NULL;
+
+  // Destroy the renderer
+  SDL_DestroyRenderer(renderer_);
+  renderer_ = NULL;
+
+  // Free resources and close SDL
+  CloseSDL();
+}
+
+void Renderer::Clear() {
+  SDL_RenderClear(renderer_);
+}
+
+void Renderer::DrawPresent() {
+  SDL_RenderPresent(renderer_);
 }

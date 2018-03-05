@@ -28,10 +28,10 @@ Player::~Player() {
   texture_ = NULL;
 }
 
-void Player::Render(SDL_Renderer* renderer) {
+void Player::Render(Renderer* renderer) {
   rect_.x = x_position;
   rect_.y = y_position;
-  SDL_RenderCopy(renderer, texture_, NULL, &rect_);
+  renderer->Render(texture_, &rect_);
 }
 
 void Player::HandleInputs(std::set<Input> inputs) {

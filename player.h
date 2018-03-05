@@ -8,6 +8,7 @@
 #include "SDL2/SDL.h"
 
 #include "./input.h"
+#include "./renderer.h"
 
 class Player {
  public:
@@ -35,7 +36,7 @@ class Player {
     void HandleInputs(std::set<Input>);
 
     // Render the player onto the screen
-    void Render(SDL_Renderer*);
+    void Render(Renderer*);
 
  private:
     SDL_Texture* texture_;

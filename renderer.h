@@ -22,6 +22,10 @@ class Renderer {
     ~Renderer();
 
     SDL_Texture* loadTexture(std::string path);
+
+    void Render(SDL_Texture*, SDL_Rect*);
+    void Clear();
+    void DrawPresent();
  private:
     SDL_Window* window_;
     SDL_Renderer* renderer_;
