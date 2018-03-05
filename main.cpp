@@ -17,11 +17,6 @@
 const int k_screen_width = 640;
 const int k_screen_height = 480;
 
-// Frame rate constants
-const int k_60_fsp_single_frame_ms = 16;
-const int k_30_fsp_single_frame_ms = 32;
-const int k_1_fsp_single_frame_ms = 1000;
-
 SDL_Window* CreateWindow() {
   SDL_Window* window = SDL_CreateWindow(
     "SDL",
@@ -90,29 +85,28 @@ SDL_Texture* loadTexture(std::string path, SDL_Renderer* renderer) {
   SDL_Surface* loadedSurface = IMG_Load(path.c_str());
   if (loadedSurface == NULL) {
     printf("Unable to load image %s! SDL_image Error: %s\n", path.c_str(), IMG_GetError());
-  } else {
-    // Create texture from surface pixels
-    newTexture = SDL_CreateTextureFromSurface(renderer, loadedSurface);
-    if (newTexture == NULL) {
-        printf("Unable to create texture from %s! SDL Error: %s\n", path.c_str(), SDL_GetError());
-    }
-
-    // Get rid of old loaded surface
-    SDL_FreeSurface(loadedSurface);
+    return NULL;
   }
+
+  // Create texture from surface pixels
+  newTexture = SDL_CreateTextureFromSurface(renderer, loadedSurface);
+  if (newTexture == NULL) {
+    printf("Unable to create texture from %s! SDL Error: %s\n", path.c_str(), SDL_GetError());
+    return NULL;
+  }
+
+  // Get rid of old loaded surface
+  SDL_FreeSurface(loadedSurface);
 
   return newTexture;
 }
 
 int main(int argc, char* args[]) {
-  bool quit = false;
-
   // Start up SDL
   if (!InitSDL()) {
     printf("Failed to initialize!\n");
     return 1;
   }
-
 
   // Create window
   SDL_Window* window = CreateWindow();
@@ -130,19 +124,19 @@ int main(int argc, char* args[]) {
 
   SDL_Texture* player_texture = loadTexture("assets/man.png", renderer);
   if (player_texture == NULL) {
-    quit = true;
+    printf("Failed to initialize!\n");
+    return 1;
   }
 
   Player* charlie = new Player(player_texture, 100, 150);
 
   SDL_Texture* background_texture = loadTexture("assets/space.png", renderer);
   if (background_texture == NULL) {
-    quit = true;
+    printf("Failed to initialize!\n");
+    return 1;
   }
 
-
-  int tick = 0;
-
+  bool quit = false;
   while (!quit) {
     // Handle events
     std::set<Input> inputs = GetInputs();
@@ -156,17 +150,11 @@ int main(int argc, char* args[]) {
 
     // Fill screen with background image
     SDL_RenderCopy(renderer, background_texture, NULL, NULL);
-    // SDL_BlitSurface(background_texture, NULL, g_sdl_screen_surface, NULL);
 
     charlie->HandleInputs(inputs);
     charlie->Render(renderer);
 
-    // Update the surface
-    // SDL_UpdateWindowSurface(g_sdl_window);
-
     SDL_RenderPresent(renderer);
-
-    tick++;
   }
 
   // Deallocate surfaces
