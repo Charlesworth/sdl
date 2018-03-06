@@ -41,6 +41,43 @@ class Object {
  private:
     SDL_Texture* texture_;
     SDL_Rect rect_;
+
+    // InputComponent* input_;
+    // PhysicsComponent* physics_;
 };
+
+class InputComponent {
+ public:
+  virtual ~InputComponent() {}
+  virtual std::set<Input> GetInputs() = 0;
+};
+
+class PlayerInputComponent : public InputComponent {
+ public:
+  virtual std::set<Input> GetInputs() {
+    // Input code...
+  }
+};
+
+class PhysicsComponent {
+ public:
+  virtual ~PhysicsComponent() {}
+  virtual void Update(Object* object) = 0;
+};
+
+class PlayerPhysicsComponent : public PhysicsComponent {
+ public:
+  virtual void update(Object* object) {
+    // Physics code...
+  }
+};
+
+// Object* createPlayer()
+// {
+//   return new GameObject(new PlayerInputComponent(),
+//                         new BjornPhysicsComponent(),
+//                         new BjornGraphicsComponent());
+// }
+
 
 #endif  // OBJECT_H_

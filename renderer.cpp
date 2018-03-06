@@ -7,8 +7,6 @@
 #include "SDL2/SDL.h"
 #include "SDL2/SDL_image.h"
 
-
-
 // TODO(charlesworth) namespace all globals
 // Screen dimension constants
 const int k_screen_width = 640;
