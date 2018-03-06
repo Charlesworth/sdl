@@ -10,10 +10,14 @@
 
 #include "./renderer.h"
 #include "./input.h"
-#include "./player.h"
+#include "./object.h"
 
 int main(int argc, char* args[]) {
   Renderer* renderer = new Renderer();
+  if (renderer == NULL) {
+    printf("Failed to initialize SDL renderer!\n");
+    return 1;
+  }
 
   SDL_Texture* player_texture = renderer->loadTexture("assets/man.png");
   if (player_texture == NULL) {
@@ -21,7 +25,11 @@ int main(int argc, char* args[]) {
     return 1;
   }
 
-  Player* charlie = new Player(player_texture, 100, 150);
+  Object* charlie = new Object(player_texture, 100, 150);
+  if (charlie == NULL) {
+    printf("Failed to initialize player!\n");
+    return 1;
+  }
 
   SDL_Texture* background_texture = renderer->loadTexture("assets/space.png");
   if (background_texture == NULL) {

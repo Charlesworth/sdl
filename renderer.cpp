@@ -94,26 +94,6 @@ Renderer::Renderer() {
   }
 }
 
-// // Initializes the renderer with defined window width and height
-// Renderer::Renderer(int screen_width, int screen_height) {
-//   // Start up SDL
-//   if (!InitSDL()) {
-//     printf("Failed to initialize!\n");
-//   }
-
-//   // Create window
-//   SDL_Window* window = CreateWindow();
-//   if (window == NULL) {
-//     printf("Failed to initialize!\n");
-//   }
-
-//   // Create renderer
-//   renderer_ = CreateRenderer(window);
-//   if (renderer_ == NULL) {
-//     printf("Failed to initialize!\n");
-//   }
-// }
-
 SDL_Texture* Renderer::loadTexture(std::string path) {
   SDL_Texture* newTexture = NULL;
 

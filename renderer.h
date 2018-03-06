@@ -15,9 +15,6 @@ class Renderer {
     // Initializes the renderer with default window width and height
     Renderer();
 
-    // Initializes the renderer with defined window width and height
-    // Renderer(int screen_width, int screen_height);
-
     // Destroys the renderer
     ~Renderer();
 

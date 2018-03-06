@@ -1,7 +1,7 @@
 // Copyright 2018 Charles Cochrane
 
-#ifndef PLAYER_H_
-#define PLAYER_H_
+#ifndef OBJECT_H_
+#define OBJECT_H_
 
 #include <set>
 
@@ -10,7 +10,7 @@
 #include "./input.h"
 #include "./renderer.h"
 
-class Player {
+class Object {
  public:
     // The dimensions of the player
     static const int k_player_width = 20;
@@ -23,14 +23,14 @@ class Player {
     float x_position;
     float y_position;
 
-    // Initializes the player with default starting x_position and y_position
-    explicit Player(SDL_Texture* player_texture);
+    // Initializes the object with default starting x_position and y_position
+    explicit Object(SDL_Texture* player_texture);
 
-    // Initializes the player with defined x_position and y_position
-    Player(SDL_Texture* player_texture, float x_position, float y_position);
+    // Initializes the object with defined x_position and y_position
+    Object(SDL_Texture* player_texture, float x_position, float y_position);
 
-    // Destroys the player
-    ~Player();
+    // Destroys the object
+    ~Object();
 
     // Takes player input and does stuff
     void HandleInputs(std::set<Input>);
@@ -43,4 +43,4 @@ class Player {
     SDL_Rect rect_;
 };
 
-#endif  // PLAYER_H_
+#endif  // OBJECT_H_
