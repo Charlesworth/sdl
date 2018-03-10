@@ -46,31 +46,31 @@ class Object {
     // PhysicsComponent* physics_;
 };
 
-class InputComponent {
- public:
-  virtual ~InputComponent() {}
-  virtual std::set<Input> GetInputs() = 0;
-};
+// class InputComponent {
+//  public:
+//   virtual ~InputComponent() {}
+//   virtual std::set<Input> GetInputs() = 0;
+// };
 
-class PlayerInputComponent : public InputComponent {
- public:
-  virtual std::set<Input> GetInputs() {
-    // Input code...
-  }
-};
+// class PlayerInputComponent : public InputComponent {
+//  public:
+//   virtual std::set<Input> GetInputs() {
+//     // Input code...
+//   }
+// };
 
-class PhysicsComponent {
- public:
-  virtual ~PhysicsComponent() {}
-  virtual void Update(Object* object) = 0;
-};
+// class PhysicsComponent {
+//  public:
+//   virtual ~PhysicsComponent() {}
+//   virtual void Update(Object* object) = 0;
+// };
 
-class PlayerPhysicsComponent : public PhysicsComponent {
- public:
-  virtual void update(Object* object) {
-    // Physics code...
-  }
-};
+// class PlayerPhysicsComponent : public PhysicsComponent {
+//  public:
+//   virtual void update(Object* object) {
+//     // Physics code...
+//   }
+// };
 
 // Object* createPlayer()
 // {

@@ -4,6 +4,7 @@
 #define RENDERER_H_
 
 #include <string>
+#include <memory>
 
 #include "SDL2/SDL.h"
 #include "SDL2/SDL_image.h"
@@ -20,7 +21,7 @@ class Renderer {
 
     SDL_Texture* loadTexture(std::string path);
 
-    void Render(SDL_Texture*, SDL_Rect*);
+    void Render(std::unique_ptr<SDL_Texture>, SDL_Rect*);
     void Clear();
     void DrawPresent();
  private:
