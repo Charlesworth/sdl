@@ -41,8 +41,6 @@ class Object {
 
  private:
     std::shared_ptr<SDL_Texture> texture_;
-    SDL_Rect rect_;
-
     // InputComponent* input_;
     // PhysicsComponent* physics_;
 };

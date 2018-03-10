@@ -14,7 +14,7 @@
 #include "./object.h"
 
 int main(int argc, char* args[]) {
-  std::shared_ptr<Renderer> renderer = std::make_shared<Renderer>();
+  auto renderer = std::make_shared<Renderer>();
   if (renderer == nullptr) {
     printf("Failed to initialize SDL renderer!\n");
     return 1;
@@ -54,7 +54,7 @@ int main(int argc, char* args[]) {
     renderer->Clear();
 
     // Fill screen with background image
-    renderer->Render(background_texture, NULL);
+    renderer->RenderBackground(background_texture);
 
     charlie->HandleInputs(inputs);
     charlie->Render(renderer);

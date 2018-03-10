@@ -18,7 +18,7 @@ std::set<Input> GetInputs() {
   }
 
   // All events must be processed before checking GetKeyboardState
-  const Uint8 *keys = SDL_GetKeyboardState(NULL);
+  const Uint8 *keys = SDL_GetKeyboardState(nullptr);
 
   // Check for quit keys
   if (keys[SDL_SCANCODE_ESCAPE]) {

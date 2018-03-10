@@ -21,7 +21,8 @@ class Renderer {
 
     std::shared_ptr<SDL_Texture> loadTexture(std::string path);
 
-    void Render(std::shared_ptr<SDL_Texture>, SDL_Rect*);
+    void Render(std::shared_ptr<SDL_Texture> texture, int xPos, int yPos, int width, int height);
+    void RenderBackground(std::shared_ptr<SDL_Texture> texture);
     void Clear();
     void DrawPresent();
  private:

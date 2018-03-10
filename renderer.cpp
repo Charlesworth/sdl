@@ -22,16 +22,16 @@ SDL_Window* CreateWindow() {
     k_screen_height,
     SDL_WINDOW_OPENGL);
 
-  if (window == NULL) {
+  if (window == nullptr) {
     printf("SDL window could not be created! SDL_Error: %s\n", SDL_GetError());
-    return NULL;
+    return nullptr;
   }
 
   SDL_GLContext gl_context = SDL_GL_CreateContext(window);
 
   if (SDL_GL_SetSwapInterval(1) != 0) {
     printf("SDL could not initialize with VSync! SDL_Error: %s\n", SDL_GetError());
-    return NULL;
+    return nullptr;
   }
 
   return window;
@@ -39,9 +39,9 @@ SDL_Window* CreateWindow() {
 
 SDL_Renderer* CreateRenderer(SDL_Window* window) {
   SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED|SDL_RENDERER_PRESENTVSYNC);
-  if (renderer == NULL) {
+  if (renderer == nullptr) {
     printf("SDL renderer could not be created! SDL Error: %s\n", SDL_GetError());
-    return NULL;
+    return nullptr;
   }
 
   // Initialize renderer color
@@ -82,13 +82,13 @@ Renderer::Renderer() {
 
   // Create window
   SDL_Window* window = CreateWindow();
-  if (window == NULL) {
+  if (window == nullptr) {
     printf("Failed to initialize!\n");
   }
 
   // Create renderer
   renderer_ = CreateRenderer(window);
-  if (renderer_ == NULL) {
+  if (renderer_ == nullptr) {
     printf("Failed to initialize!\n");
   }
 }
@@ -124,18 +124,29 @@ std::shared_ptr<SDL_Texture> Renderer::loadTexture(std::string path) {
     sdl_deleter());
 }
 
-void Renderer::Render(std::shared_ptr<SDL_Texture> texture, SDL_Rect* rect) {
-  SDL_RenderCopy(renderer_, texture.get(), NULL, rect);
+void Renderer::Render(std::shared_ptr<SDL_Texture> texture, int xPos, int yPos, int width, int height) {
+  SDL_Rect rect;
+
+  rect.x = xPos;
+  rect.y = yPos;
+  rect.w = width;
+  rect.h = height;
+
+  SDL_RenderCopy(renderer_, texture.get(), nullptr, &rect);
+}
+
+void Renderer::RenderBackground(std::shared_ptr<SDL_Texture> texture) {
+  SDL_RenderCopy(renderer_, texture.get(), nullptr, nullptr);
 }
 
 Renderer::~Renderer() {
   // Destroy window
   SDL_DestroyWindow(window_);
-  window_ = NULL;
+  window_ = nullptr;
 
   // Destroy the renderer
   SDL_DestroyRenderer(renderer_);
-  renderer_ = NULL;
+  renderer_ = nullptr;
 
   // Free resources and close SDL
   CloseSDL();
