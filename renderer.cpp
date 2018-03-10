@@ -93,31 +93,39 @@ Renderer::Renderer() {
   }
 }
 
-SDL_Texture* Renderer::loadTexture(std::string path) {
-  SDL_Texture* newTexture = NULL;
+struct sdl_deleter{
+  void operator()(SDL_Window *p) const { SDL_DestroyWindow(p); }
+  void operator()(SDL_Renderer *p) const { SDL_DestroyRenderer(p); }
+  void operator()(SDL_Texture *p) const { SDL_DestroyTexture(p); }
+};
+
+std::shared_ptr<SDL_Texture> Renderer::loadTexture(std::string path) {
+  SDL_Texture* newTexture = nullptr;
 
   // Load image at specified path
   SDL_Surface* loadedSurface = IMG_Load(path.c_str());
-  if (loadedSurface == NULL) {
+  if (loadedSurface == nullptr) {
     printf("Unable to load image %s! SDL_image Error: %s\n", path.c_str(), IMG_GetError());
-    return NULL;
+    return nullptr;
   }
 
   // Create texture from surface pixels
   newTexture = SDL_CreateTextureFromSurface(renderer_, loadedSurface);
-  if (newTexture == NULL) {
+  if (newTexture == nullptr) {
     printf("Unable to create texture from %s! SDL Error: %s\n", path.c_str(), SDL_GetError());
-    return NULL;
+    return nullptr;
   }
 
   // Get rid of old loaded surface
   SDL_FreeSurface(loadedSurface);
 
-  return newTexture;
+  return std::shared_ptr<SDL_Texture>(
+    newTexture,
+    sdl_deleter());
 }
 
-void Renderer::Render(SDL_Texture* texture, SDL_Rect* rect) {
-  SDL_RenderCopy(renderer_, texture, NULL, rect);
+void Renderer::Render(std::shared_ptr<SDL_Texture> texture, SDL_Rect* rect) {
+  SDL_RenderCopy(renderer_, texture.get(), NULL, rect);
 }
 
 Renderer::~Renderer() {

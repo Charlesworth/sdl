@@ -19,9 +19,9 @@ class Renderer {
     // Destroys the renderer
     ~Renderer();
 
-    SDL_Texture* loadTexture(std::string path);
+    std::shared_ptr<SDL_Texture> loadTexture(std::string path);
 
-    void Render(std::unique_ptr<SDL_Texture>, SDL_Rect*);
+    void Render(std::shared_ptr<SDL_Texture>, SDL_Rect*);
     void Clear();
     void DrawPresent();
  private:

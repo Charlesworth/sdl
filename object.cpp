@@ -9,7 +9,7 @@
 
 #include "./input.h"
 
-Object::Object(SDL_Texture* player_texture) :
+Object::Object(std::shared_ptr<SDL_Texture> player_texture) :
 texture_(player_texture) {
   x_position = 100.0;
   y_position = 100.0;
@@ -17,18 +17,17 @@ texture_(player_texture) {
   rect_.h = k_player_height;
 }
 
-Object::Object(SDL_Texture* player_texture, float x_position, float y_position) :
+Object::Object(std::shared_ptr<SDL_Texture> player_texture, float x_position, float y_position) :
 texture_(player_texture), x_position(x_position), y_position(y_position) {
   rect_.w = k_player_width;
   rect_.h = k_player_height;
 }
 
 Object::~Object() {
-  SDL_DestroyTexture(texture_);
-  texture_ = NULL;
+  // TODO(charlesworth) something here?
 }
 
-void Object::Render(Renderer* renderer) {
+void Object::Render(std::shared_ptr<Renderer> renderer) {
   rect_.x = x_position;
   rect_.y = y_position;
   renderer->Render(texture_, &rect_);

@@ -4,6 +4,7 @@
 #define OBJECT_H_
 
 #include <set>
+#include <memory>
 
 #include "SDL2/SDL.h"
 
@@ -24,10 +25,10 @@ class Object {
     float y_position;
 
     // Initializes the object with default starting x_position and y_position
-    explicit Object(SDL_Texture* player_texture);
+    explicit Object(std::shared_ptr<SDL_Texture> player_texture);
 
     // Initializes the object with defined x_position and y_position
-    Object(SDL_Texture* player_texture, float x_position, float y_position);
+    Object(std::shared_ptr<SDL_Texture> player_texture, float x_position, float y_position);
 
     // Destroys the object
     ~Object();
@@ -36,10 +37,10 @@ class Object {
     void HandleInputs(std::set<Input>);
 
     // Render the player onto the screen
-    void Render(Renderer*);
+    void Render(std::shared_ptr<Renderer>);
 
  private:
-    SDL_Texture* texture_;
+    std::shared_ptr<SDL_Texture> texture_;
     SDL_Rect rect_;
 
     // InputComponent* input_;
