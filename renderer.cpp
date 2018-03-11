@@ -124,6 +124,34 @@ std::shared_ptr<SDL_Texture> Renderer::loadTexture(std::string path) {
     sdl_deleter());
 }
 
+std::shared_ptr<SDL_Texture> Renderer::loadTextureColorKey(std::string path, int red, int green, int blue) {
+  SDL_Texture* newTexture = nullptr;
+
+  // Load image at specified path
+  SDL_Surface* loadedSurface = IMG_Load(path.c_str());
+  if (loadedSurface == nullptr) {
+    printf("Unable to load image %s! SDL_image Error: %s\n", path.c_str(), IMG_GetError());
+    return nullptr;
+  }
+
+  // Color key image
+  SDL_SetColorKey(loadedSurface, SDL_TRUE, SDL_MapRGB(loadedSurface->format, red, green, blue));
+
+  // Create texture from surface pixels
+  newTexture = SDL_CreateTextureFromSurface(renderer_, loadedSurface);
+  if (newTexture == nullptr) {
+    printf("Unable to create texture from %s! SDL Error: %s\n", path.c_str(), SDL_GetError());
+    return nullptr;
+  }
+
+  // Get rid of old loaded surface
+  SDL_FreeSurface(loadedSurface);
+
+  return std::shared_ptr<SDL_Texture>(
+    newTexture,
+    sdl_deleter());
+}
+
 void Renderer::Render(std::shared_ptr<SDL_Texture> texture, int xPos, int yPos, int width, int height) {
   SDL_Rect rect;
 

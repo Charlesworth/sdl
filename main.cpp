@@ -20,8 +20,7 @@ int main(int argc, char* args[]) {
     return 1;
   }
 
-  auto player_texture = renderer->loadTexture("assets/man.png");
-
+  auto player_texture = renderer->loadTextureColorKey("assets/man.png", 255, 255, 255);
   if (player_texture == nullptr) {
     printf("Failed to initialize!\n");
     return 1;
@@ -33,9 +32,7 @@ int main(int argc, char* args[]) {
     return 1;
   }
 
-
   auto background_texture = renderer->loadTexture("assets/space.png");
-
   if (background_texture == nullptr) {
     printf("Failed to initialize!\n");
     return 1;

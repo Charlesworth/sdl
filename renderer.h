@@ -20,6 +20,7 @@ class Renderer {
     ~Renderer();
 
     std::shared_ptr<SDL_Texture> loadTexture(std::string path);
+    std::shared_ptr<SDL_Texture> loadTextureColorKey(std::string path, int red, int green, int blue);
 
     void Render(std::shared_ptr<SDL_Texture> texture, int xPos, int yPos, int width, int height);
     void RenderBackground(std::shared_ptr<SDL_Texture> texture);
