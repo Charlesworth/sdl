@@ -54,7 +54,9 @@ int main(int argc, char* args[]) {
     renderer->RenderBackground(background_texture);
 
     charlie->HandleInputs(inputs);
-    charlie->Render(renderer);
+
+    renderer->Render(charlie->GetTexture(), charlie->x_position, charlie->y_position, charlie->k_player_width, charlie->k_player_height);
+    // charlie->Render(renderer);
 
     renderer->DrawPresent();
   }

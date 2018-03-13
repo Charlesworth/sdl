@@ -91,6 +91,8 @@ Renderer::Renderer() {
   if (renderer_ == nullptr) {
     printf("Failed to initialize!\n");
   }
+
+  std::map <std::string, std::shared_ptr<SDL_Texture>> textures_;
 }
 
 struct sdl_deleter{
@@ -125,6 +127,11 @@ std::shared_ptr<SDL_Texture> Renderer::loadTexture(std::string path) {
 }
 
 std::shared_ptr<SDL_Texture> Renderer::loadTextureColorKey(std::string path, int red, int green, int blue) {
+  // Check texture store
+  // if (textures_[path]) {
+  //   return textures_[path]
+  // }
+
   SDL_Texture* newTexture = nullptr;
 
   // Load image at specified path
@@ -165,6 +172,12 @@ void Renderer::Render(std::shared_ptr<SDL_Texture> texture, int xPos, int yPos, 
 
 void Renderer::RenderBackground(std::shared_ptr<SDL_Texture> texture) {
   SDL_RenderCopy(renderer_, texture.get(), nullptr, nullptr);
+}
+
+void Renderer::DropTexture(std::string texture_name) {
+  if (textures_[texture_name].use_count() == 1) {
+    textures_.erase(texture_name);
+  }
 }
 
 Renderer::~Renderer() {

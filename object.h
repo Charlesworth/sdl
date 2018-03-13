@@ -39,6 +39,8 @@ class Object {
     // Render the player onto the screen
     void Render(std::shared_ptr<Renderer>);
 
+    std::shared_ptr<SDL_Texture> GetTexture();
+
  private:
     std::shared_ptr<SDL_Texture> texture_;
     // InputComponent* input_;

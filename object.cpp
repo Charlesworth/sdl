@@ -26,6 +26,10 @@ void Object::Render(std::shared_ptr<Renderer> renderer) {
   renderer->Render(texture_, x_position, y_position, k_player_width, k_player_height);
 }
 
+std::shared_ptr<SDL_Texture> Object::GetTexture() {
+  return texture_;
+}
+
 void Object::HandleInputs(std::set<Input> inputs) {
   float velocity;
 
