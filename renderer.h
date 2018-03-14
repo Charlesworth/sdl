@@ -27,7 +27,6 @@ class Renderer {
     void RenderBackground(std::shared_ptr<SDL_Texture> texture);
     void Clear();
     void DrawPresent();
-    void DropTexture(std::string texture_name);
  private:
     SDL_Window* window_;
     SDL_Renderer* renderer_;
@@ -37,14 +36,14 @@ class Renderer {
 class Texture {
  public:
     // Initializes the texture with width and height
-    Texture(std::shared_ptr<SDL_Texture> texture, int width, int height)
-    : texture(texture), width(width), height(height) {}
+    Texture(std::shared_ptr<SDL_Texture> texture, int width, int height, std::string path)
+    : texture(texture), width(width), height(height), path(path) {}
 
     // Destroys the texture
-    ~Texture();
+    ~Texture() {}
 
     std::shared_ptr<SDL_Texture> texture;
-    std::string name;
+    std::string path;
     int height;
     int width;
 };

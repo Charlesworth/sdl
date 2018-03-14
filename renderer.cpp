@@ -135,9 +135,14 @@ std::shared_ptr<SDL_Texture> Renderer::loadTexture(std::string path, int r, int 
   // Get rid of old loaded surface
   SDL_FreeSurface(loaded_surface);
 
+  int w, h;
+  SDL_QueryTexture(new_texture, NULL, NULL, &w, &h);
+
   auto shared_texture = std::shared_ptr<SDL_Texture>(
     new_texture,
     sdl_deleter());
+
+  Texture t = Texture(shared_texture, w, h, path);
 
   // Add the weak_ptr to textures_ so it can be shared but not ref counted
   auto weak_shared_texture = std::weak_ptr<SDL_Texture>(shared_texture);
@@ -176,9 +181,14 @@ std::shared_ptr<SDL_Texture> Renderer::loadTexture(std::string path) {
   // Get rid of old loaded surface
   SDL_FreeSurface(loaded_surface);
 
+  int w, h;
+  SDL_QueryTexture(new_texture, NULL, NULL, &w, &h);
+
   auto shared_texture = std::shared_ptr<SDL_Texture>(
     new_texture,
     sdl_deleter());
+
+  Texture t = Texture(shared_texture, w, h, path);
 
   // Add the weak_ptr to textures_ so it can be shared but not ref counted
   auto weak_shared_texture = std::weak_ptr<SDL_Texture>(shared_texture);
@@ -201,12 +211,6 @@ void Renderer::Render(std::shared_ptr<SDL_Texture> texture, int xPos, int yPos, 
 
 void Renderer::RenderBackground(std::shared_ptr<SDL_Texture> texture) {
   SDL_RenderCopy(renderer_, texture.get(), nullptr, nullptr);
-}
-
-void Renderer::DropTexture(std::string texture_name) {
-  if (textures_[texture_name].use_count() == 1) {
-    textures_.erase(texture_name);
-  }
 }
 
 Renderer::~Renderer() {
