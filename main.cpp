@@ -20,7 +20,7 @@ int main(int argc, char* args[]) {
     return 1;
   }
 
-  auto player_texture = renderer->loadTextureColorKey("assets/man.png", 255, 255, 255);
+  auto player_texture = renderer->loadTexture("assets/man.png", 255, 255, 255);
   if (player_texture == nullptr) {
     printf("Failed to initialize!\n");
     return 1;
@@ -56,7 +56,6 @@ int main(int argc, char* args[]) {
     charlie->HandleInputs(inputs);
 
     renderer->Render(charlie->GetTexture(), charlie->x_position, charlie->y_position, charlie->k_player_width, charlie->k_player_height);
-    // charlie->Render(renderer);
 
     renderer->DrawPresent();
   }

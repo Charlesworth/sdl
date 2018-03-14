@@ -21,7 +21,7 @@ class Renderer {
     ~Renderer();
 
     std::shared_ptr<SDL_Texture> loadTexture(std::string path);
-    std::shared_ptr<SDL_Texture> loadTextureColorKey(std::string path, int red, int green, int blue);
+    std::shared_ptr<SDL_Texture> loadTexture(std::string path, int r, int g, int b);
 
     void Render(std::shared_ptr<SDL_Texture> texture, int x_pos, int y_pos, int width, int height);
     void RenderBackground(std::shared_ptr<SDL_Texture> texture);
@@ -31,7 +31,7 @@ class Renderer {
  private:
     SDL_Window* window_;
     SDL_Renderer* renderer_;
-    std::map <std::string, std::shared_ptr<SDL_Texture>> textures_;
+    std::map <std::string, std::weak_ptr<SDL_Texture>> textures_;
 };
 
 class Texture {
@@ -41,14 +41,12 @@ class Texture {
     : texture(texture), width(width), height(height) {}
 
     // Destroys the texture
-    ~Texture() {owning_renderer_.get()->DropTexture(name);}
+    ~Texture();
 
     std::shared_ptr<SDL_Texture> texture;
+    std::string name;
     int height;
     int width;
-    std::string name;
- private:
-    std::shared_ptr<Renderer> owning_renderer_;
 };
 
 #endif  // RENDERER_H_

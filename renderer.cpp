@@ -92,7 +92,7 @@ Renderer::Renderer() {
     printf("Failed to initialize!\n");
   }
 
-  std::map <std::string, std::shared_ptr<SDL_Texture>> textures_;
+  std::map <std::string, std::weak_ptr<SDL_Texture>> textures_;
 }
 
 struct sdl_deleter{
@@ -101,62 +101,91 @@ struct sdl_deleter{
   void operator()(SDL_Texture *p) const { SDL_DestroyTexture(p); }
 };
 
-std::shared_ptr<SDL_Texture> Renderer::loadTexture(std::string path) {
-  SDL_Texture* newTexture = nullptr;
-
-  // Load image at specified path
-  SDL_Surface* loadedSurface = IMG_Load(path.c_str());
-  if (loadedSurface == nullptr) {
-    printf("Unable to load image %s! SDL_image Error: %s\n", path.c_str(), IMG_GetError());
-    return nullptr;
+std::shared_ptr<SDL_Texture> Renderer::loadTexture(std::string path, int r, int g, int b) {
+  if ( textures_.find(path) != textures_.end() ) {
+    // if found check the weak_ptr is still live
+    if (std::shared_ptr<SDL_Texture> shared_texture = textures_[path].lock()) {
+      // still exists
+      return shared_texture;
+    }
   }
 
-  // Create texture from surface pixels
-  newTexture = SDL_CreateTextureFromSurface(renderer_, loadedSurface);
-  if (newTexture == nullptr) {
-    printf("Unable to create texture from %s! SDL Error: %s\n", path.c_str(), SDL_GetError());
-    return nullptr;
-  }
-
-  // Get rid of old loaded surface
-  SDL_FreeSurface(loadedSurface);
-
-  return std::shared_ptr<SDL_Texture>(
-    newTexture,
-    sdl_deleter());
-}
-
-std::shared_ptr<SDL_Texture> Renderer::loadTextureColorKey(std::string path, int red, int green, int blue) {
-  // Check texture store
-  // if (textures_[path]) {
-  //   return textures_[path]
-  // }
-
-  SDL_Texture* newTexture = nullptr;
+  SDL_Texture* new_texture = nullptr;
 
   // Load image at specified path
-  SDL_Surface* loadedSurface = IMG_Load(path.c_str());
-  if (loadedSurface == nullptr) {
+  SDL_Surface* loaded_surface = IMG_Load(path.c_str());
+  if (loaded_surface == nullptr) {
     printf("Unable to load image %s! SDL_image Error: %s\n", path.c_str(), IMG_GetError());
     return nullptr;
   }
 
   // Color key image
-  SDL_SetColorKey(loadedSurface, SDL_TRUE, SDL_MapRGB(loadedSurface->format, red, green, blue));
+  SDL_SetColorKey(
+    loaded_surface,
+    SDL_TRUE,
+    SDL_MapRGB(loaded_surface->format, r, g, b));
 
   // Create texture from surface pixels
-  newTexture = SDL_CreateTextureFromSurface(renderer_, loadedSurface);
-  if (newTexture == nullptr) {
+  new_texture = SDL_CreateTextureFromSurface(renderer_, loaded_surface);
+  if (new_texture == nullptr) {
     printf("Unable to create texture from %s! SDL Error: %s\n", path.c_str(), SDL_GetError());
     return nullptr;
   }
 
   // Get rid of old loaded surface
-  SDL_FreeSurface(loadedSurface);
+  SDL_FreeSurface(loaded_surface);
 
-  return std::shared_ptr<SDL_Texture>(
-    newTexture,
+  auto shared_texture = std::shared_ptr<SDL_Texture>(
+    new_texture,
     sdl_deleter());
+
+  // Add the weak_ptr to textures_ so it can be shared but not ref counted
+  auto weak_shared_texture = std::weak_ptr<SDL_Texture>(shared_texture);
+
+  textures_[path] = weak_shared_texture;
+
+  return shared_texture;
+}
+
+
+std::shared_ptr<SDL_Texture> Renderer::loadTexture(std::string path) {
+  if ( textures_.find(path) != textures_.end() ) {
+    // if found check the weak_ptr is still live
+    if (std::shared_ptr<SDL_Texture> shared_texture = textures_[path].lock()) {
+      // still exists
+      return shared_texture;
+    }
+  }
+
+  SDL_Texture* new_texture = nullptr;
+
+  // Load image at specified path
+  SDL_Surface* loaded_surface = IMG_Load(path.c_str());
+  if (loaded_surface == nullptr) {
+    printf("Unable to load image %s! SDL_image Error: %s\n", path.c_str(), IMG_GetError());
+    return nullptr;
+  }
+
+  // Create texture from surface pixels
+  new_texture = SDL_CreateTextureFromSurface(renderer_, loaded_surface);
+  if (new_texture == nullptr) {
+    printf("Unable to create texture from %s! SDL Error: %s\n", path.c_str(), SDL_GetError());
+    return nullptr;
+  }
+
+  // Get rid of old loaded surface
+  SDL_FreeSurface(loaded_surface);
+
+  auto shared_texture = std::shared_ptr<SDL_Texture>(
+    new_texture,
+    sdl_deleter());
+
+  // Add the weak_ptr to textures_ so it can be shared but not ref counted
+  auto weak_shared_texture = std::weak_ptr<SDL_Texture>(shared_texture);
+
+  textures_[path] = weak_shared_texture;
+
+  return shared_texture;
 }
 
 void Renderer::Render(std::shared_ptr<SDL_Texture> texture, int xPos, int yPos, int width, int height) {

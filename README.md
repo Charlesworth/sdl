@@ -12,7 +12,6 @@ Always pleanty of TODOs in the code to grep through, here some others that don't
 - Find proper structure for a cpp project's source files
 - Choose a build scripting methodology, something better than my build script
 - Produce a renderer class and remove all SDL from the player and main files.
-- Textures should use shared_ptr so repeated textures are only once.
 - Add frame rate instrumentations.
 
 ## Style Guide
