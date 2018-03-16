@@ -1,9 +1,6 @@
 // Copyright 2018 Charles Cochrane
 
 #include <stdio.h>
-#include <string>
-#include <vector>
-#include <iterator>
 #include <memory>
 
 #include "SDL2/SDL.h"
@@ -27,11 +24,7 @@ int main(int argc, char* args[]) {
   }
   auto player_texture = player_texture_optional.value();
 
-  std::unique_ptr<Object> charlie = std::make_unique<Object>(player_texture, 100, 150);
-  if (charlie == nullptr) {
-    printf("Failed to initialize player!\n");
-    return 1;
-  }
+  Object charlie = Object(player_texture, 100, 150);
 
   auto background_texture_optional = renderer->loadTexture("assets/space.png");
   if (!background_texture_optional.has_value()) {
@@ -55,14 +48,14 @@ int main(int argc, char* args[]) {
     // Fill screen with background image
     renderer->RenderBackground(background_texture);
 
-    charlie->HandleInputs(inputs);
+    charlie.HandleInputs(inputs);
 
     renderer->Render(
-      charlie->GetTexture(),
-      charlie->x_position,
-      charlie->y_position,
-      charlie->k_player_width,
-      charlie->k_player_height);
+      charlie.GetTexture(),
+      charlie.x_position,
+      charlie.y_position,
+      charlie.k_player_width,
+      charlie.k_player_height);
 
     renderer->DrawPresent();
   }
