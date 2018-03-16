@@ -9,13 +9,13 @@
 
 #include "./input.h"
 
-Object::Object(std::shared_ptr<SDL_Texture> player_texture) :
+Object::Object(Texture player_texture) :
 texture_(player_texture) {
   x_position = 100.0;
   y_position = 100.0;
 }
 
-Object::Object(std::shared_ptr<SDL_Texture> player_texture, float x_position, float y_position) :
+Object::Object(Texture player_texture, float x_position, float y_position) :
 texture_(player_texture), x_position(x_position), y_position(y_position) {}
 
 Object::~Object() {
@@ -26,7 +26,7 @@ void Object::Render(std::shared_ptr<Renderer> renderer) {
   renderer->Render(texture_, x_position, y_position, k_player_width, k_player_height);
 }
 
-std::shared_ptr<SDL_Texture> Object::GetTexture() {
+Texture Object::GetTexture() {
   return texture_;
 }
 

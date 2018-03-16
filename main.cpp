@@ -20,11 +20,12 @@ int main(int argc, char* args[]) {
     return 1;
   }
 
-  auto player_texture = renderer->loadTexture("assets/man.png", 255, 255, 255);
-  if (player_texture == nullptr) {
+  auto player_texture_optional = renderer->loadTexture("assets/man.png", 255, 255, 255);
+  if (!player_texture_optional.has_value()) {
     printf("Failed to initialize!\n");
     return 1;
   }
+  auto player_texture = player_texture_optional.value();
 
   std::unique_ptr<Object> charlie = std::make_unique<Object>(player_texture, 100, 150);
   if (charlie == nullptr) {
@@ -32,11 +33,12 @@ int main(int argc, char* args[]) {
     return 1;
   }
 
-  auto background_texture = renderer->loadTexture("assets/space.png");
-  if (background_texture == nullptr) {
+  auto background_texture_optional = renderer->loadTexture("assets/space.png");
+  if (!background_texture_optional.has_value()) {
     printf("Failed to initialize!\n");
     return 1;
   }
+  auto background_texture = background_texture_optional.value();
 
   bool quit = false;
   while (!quit) {
@@ -55,7 +57,12 @@ int main(int argc, char* args[]) {
 
     charlie->HandleInputs(inputs);
 
-    renderer->Render(charlie->GetTexture(), charlie->x_position, charlie->y_position, charlie->k_player_width, charlie->k_player_height);
+    renderer->Render(
+      charlie->GetTexture(),
+      charlie->x_position,
+      charlie->y_position,
+      charlie->k_player_width,
+      charlie->k_player_height);
 
     renderer->DrawPresent();
   }

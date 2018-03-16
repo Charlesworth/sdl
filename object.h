@@ -25,10 +25,10 @@ class Object {
     float y_position;
 
     // Initializes the object with default starting x_position and y_position
-    explicit Object(std::shared_ptr<SDL_Texture> player_texture);
+    explicit Object(Texture player_texture);
 
     // Initializes the object with defined x_position and y_position
-    Object(std::shared_ptr<SDL_Texture> player_texture, float x_position, float y_position);
+    Object(Texture player_texture, float x_position, float y_position);
 
     // Destroys the object
     ~Object();
@@ -39,10 +39,10 @@ class Object {
     // Render the player onto the screen
     void Render(std::shared_ptr<Renderer>);
 
-    std::shared_ptr<SDL_Texture> GetTexture();
+    Texture GetTexture();
 
  private:
-    std::shared_ptr<SDL_Texture> texture_;
+    Texture texture_;
     // InputComponent* input_;
     // PhysicsComponent* physics_;
 };
